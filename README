@@ -1,0 +1,3 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=856
+
+Syntax highlighting for NSIS 2.0 and above, which added many new instructions and attributes since the 1.x tree, not supported by the previous scripts.
