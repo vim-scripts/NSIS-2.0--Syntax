@@ -4,8 +4,11 @@
 " Language:		NSIS 2.0+
 " Maintainer:	Scott D. Barker <scott@redrubberball.net>
 " Last Change:	2003.12.14 @ 07:49:47
-" Version: 		1.1
+" Version: 		1.3
 " Changelog:
+"	1.3:
+"	  -	Added:
+"	  	DirVerify, UninstPage, GetInstDirError
 "	1.1:	
 "     -	Added:
 "		Nop, LangString, SetBrandingImage, the /a switch for File, the /e switch for SubSection,
@@ -207,7 +210,7 @@ syn keyword nsisInstruction	IfSilent CreateFont SetCtlColors
 
 "FUNCTIONS - Branching, flow control, error checking, user interaction, etc instructions
 syn keyword nsisInstruction	Goto Call Return IfErrors ClearErrors SetErrors FindWindow
-syn keyword nsisInstruction	SendMessage IsWindow IfFileExists MessageBox StrCmp
+syn keyword nsisInstruction	SendMessage IsWindow IfFileExists MessageBox StrCmp DirVerify GetInstDirError
 syn keyword nsisInstruction	IntCmp IntCmpU Abort Quit GetFunctionAddress GetLabelAddress
 syn keyword nsisInstruction	GetCurrentAddress
 
