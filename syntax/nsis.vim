@@ -1,9 +1,24 @@
 " Vim syntax file
-" Language:	NSIS script, for version of NSIS 2.0 and later
-" Maintainer:	Scott D. Barker <scott@redrubberball.net>
-" Last Change:	2003 Dec 13
-" Version: 1.0
 " Based on the version for NSIS 1.91 and later, by Alex Jakushev <Alex.Jakushev@kemek.lt>
+"
+" Language:		NSIS 2.0+
+" Maintainer:	Scott D. Barker <scott@redrubberball.net>
+" Last Change:	2003.12.14 @ 07:49:47
+" Version: 		1.1
+" Changelog:
+"	1.1:	
+"     -	Added:
+"		Nop, LangString, SetBrandingImage, the /a switch for File, the /e switch for SubSection,
+"		the /o switch for Section, $PLUGINSDIR, !ifmacrodef, !ifmacrondef, IDD_LICENSE_FSRB, IDD_LICENSE_FSCB,
+"		the /FINAL switch for SetCompressor and the /SD switch for MessageBox.
+"	  -	Changed:
+"		InitPluginsDir, IfSilent, CreateFont and SetCtlColors are not attributes, they're commands.
+"		EnabledBitmap and DisabledBitmap are obselete.
+"		LoadLanguageFile is an instruction, it's... hmm... atrribute?
+"		Uninstaller now has un.onMouseOverSection and un.onSelChange too.
+"		There is no un.onInstSuccess and un.onInstFailed, it's un.onUninstSuccess and un.onUninstFailed.
+"	1.0:
+"		Initial public release
 
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded
@@ -36,6 +51,9 @@ syn match nsisPreCondit		"!else\>"
 syn match nsisMacro			"!macro\>"
 syn match nsisMacro			"!macroend\>"
 syn match nsisMacro			"!insertmacro\>"
+syn match nsisMacro			"!ifmacrodef\>"
+syn match nsisMacro			"!ifmacrondef\>"
+syn match nsisMacro			"!insertmacro\>"
 syn match nsisDefine		"Var\>"
 
 "COMPILER UTILITY
@@ -66,6 +84,7 @@ syn match nsisSysVar		"$SMPROGRAMS"
 syn match nsisSysVar		"$SMSTARTUP"
 syn match nsisSysVar		"$QUICKLAUNCH"
 syn match nsisSysVar		"$HWNDPARENT"
+syn match nsisSysVar		"$PLUGINSDIR"
 syn match nsisSysVar		"$\\r"
 syn match nsisSysVar		"$\\n"
 syn match nsisSysVar		"$\$"
@@ -84,7 +103,7 @@ syn keyword nsisAttribOptions	manual alwaysoff
 syn keyword nsisAttribOptions	zlib bzip2 lzma
 syn keyword nsisAttribOptions	ProductName Comments CompanyName LegalCopyright FileDescription FileVersion
 syn keyword nsisAttribOptions	ProductVersion InternalName LegalTrademarks OriginalFilename PrivateBuild SpecialBuild
-syn keyword nsisAttribOptions	IDD_LICENSE IDD_DIR IDD_SELCOM IDD_INST IDD_INSTFILES IDD_UNINST IDD_VERIFY
+syn keyword nsisAttribOptions	IDD_LICENSE IDD_LICENSE_FSRB IDD_LICENSE_FSCB IDD_DIR IDD_SELCOM IDD_INST IDD_INSTFILES IDD_UNINST IDD_VERIFY
 
 syn match nsisAttribOptions	'\/NOCUSTOM'
 syn match nsisAttribOptions	'\/CUSTOMSTRING'
@@ -102,6 +121,11 @@ syn match nsisAttribOptions	'\/windows'
 syn match nsisAttribOptions	'\/TRIMLEFT'
 syn match nsisAttribOptions	'\/TRIMRIGHT'
 syn match nsisAttribOptions	'\/TRIMCENTER'
+syn match nsisAttribOptions	'\/FINAL'
+syn match nsisAttribOptions	'\/SD'
+syn match nsisAttribOptions	'\/a'
+syn match nsisAttribOptions	'\/e'
+syn match nsisAttribOptions	'\/o'
 
 syn keyword nsisExecShell	SW_SHOWNORMAL SW_SHOWMAXIMIZED SW_SHOWMINIMIZED
 
@@ -127,10 +151,10 @@ syn match nsisNumber		"\<0\o*\>"
 
 "INSTALLER ATTRIBUTES - General installer configuration
 syn keyword nsisAttribute	OutFile Name Caption SubCaption BrandingText Icon
-syn keyword nsisAttribute	WindowIcon BGGradient SilentInstall SilentUnInstall IfSilent
+syn keyword nsisAttribute	WindowIcon BGGradient SilentInstall SilentUnInstall 
 syn keyword nsisAttribute	CRCCheck MiscButtonText InstallButtonText FileErrorText
-syn keyword nsisAttribute	XPStyle VIAddVersionKey VIProductVersion CreateFont SetFont
-syn keyword nsisAttribute	AddBrandingImage ChangeUI SetCtlColors
+syn keyword nsisAttribute	XPStyle VIAddVersionKey VIProductVersion SetFont
+syn keyword nsisAttribute	AddBrandingImage SetBrandingImage ChangeUI LoadLanguageFile 
 
 "INSTALLER ATTRIBUTES - Install directory configuration
 syn keyword nsisAttribute	InstallDir InstallDirRegKey
@@ -139,7 +163,7 @@ syn keyword nsisAttribute	InstallDir InstallDirRegKey
 syn keyword nsisAttribute	LicenseText LicenseData LicenseLangString LicenseForceSelection LicenseBkColor
 
 "INSTALLER ATTRIBUTES - Component page configuration
-syn keyword nsisAttribute	ComponentText InstType EnabledBitmap DisabledBitmap SpaceTexts
+syn keyword nsisAttribute	ComponentText InstType SpaceTexts
 syn keyword nsisAttribute	SetCurInstType GetCurInstType InstTypeGetText InstTypeSetText
 
 "INSTALLER ATTRIBUTES - Directory page configuration
@@ -155,10 +179,10 @@ syn keyword nsisAttribute	UninstallSubCaption ShowUninstDetails UninstallButtonT
 
 "COMPILER ATTRIBUTES
 syn keyword nsisCompiler	SetOverwrite SetCompress SetDatablockOptimize SetDateSave
-syn keyword nsisCompiler	SetCompressor FileBufSize AllowSkipFiles SetPluginUnload InitPluginsDir
+syn keyword nsisCompiler	SetCompressor FileBufSize AllowSkipFiles SetPluginUnload
 
 "PAGE ATTRIBUTES
-syn keyword nsisCompiler	Page PageCallbacks PageEx PageExEnd
+syn keyword nsisCompiler	Page UninstPage PageCallbacks PageEx PageExEnd
 
 "PLUGIN COMMAND
 syn match	nsisInstruction	"\w\+::\w\+"
@@ -178,7 +202,8 @@ syn keyword nsisInstruction	EnumRegValue DeleteINISec DeleteINIStr FlushINI
 syn keyword nsisInstruction	CreateDirectory CopyFiles SetFileAttributes CreateShortCut
 syn keyword nsisInstruction	GetFullPathName SearchPath GetTempFileName CallInstDLL
 syn keyword nsisInstruction	RegDLL UnRegDLL GetDLLVersion GetDLLVersionLocal
-syn keyword nsisInstruction	GetFileTime GetFileTimeLocal GetDlgItem
+syn keyword nsisInstruction	GetFileTime GetFileTimeLocal GetDlgItem InitPluginsDir
+syn keyword nsisInstruction	IfSilent CreateFont SetCtlColors
 
 "FUNCTIONS - Branching, flow control, error checking, user interaction, etc instructions
 syn keyword nsisInstruction	Goto Call Return IfErrors ClearErrors SetErrors FindWindow
@@ -217,7 +242,7 @@ syn keyword nsisInstruction	SectionSetFlags SectionGetFlags SectionSetText
 syn keyword nsisInstruction	SectionGetText SectionSetInstTypes SectionGetInstTypes SectionGetSize SectionSetSize
 
 "FUNCTIONS - Language file functions
-syn keyword nsisInstruction	LoadLanguageFile
+syn keyword nsisInstruction	LangString
 
 
 
@@ -235,11 +260,13 @@ syn match nsisCallback		"\.onMouseOverSection"
 "SPECIAL FUNCTIONS - uninstall
 syn match nsisCallback		"un\.onInit"
 syn match nsisCallback		"un\.onUserAbort"
-syn match nsisCallback		"un\.onInstSuccess"
-syn match nsisCallback		"un\.onInstFailed"
+syn match nsisCallback		"un\.onUninstSuccess"
+syn match nsisCallback		"un\.onUninstFailed"
 syn match nsisCallback		"un\.onVerifyInstDir"
 syn match nsisCallback		"un\.onGuiInit"
 syn match nsisCallback		"un\.onGuiEnd"
+syn match nsisCallback		"un\.onMouseOverSection"
+syn match nsisCallback		"un\.onSelChange"
 
 
 "STATEMENTS - sections
